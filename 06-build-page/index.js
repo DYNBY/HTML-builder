@@ -89,7 +89,14 @@ async function copyDirectory() {
       }
       files.forEach((file) => {
         const filePath = path.join(assetsPath, file);
-        fs.unlink(filePath, (err) => {
+        if (file.isFile) {
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error(err);
+            }
+          });
+        }
+        fs.rm(filePath, { recursive:true }, (err) => {
           if (err) {
             console.error(err);
           }
