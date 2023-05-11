@@ -82,38 +82,20 @@ async function copyDirectory() {
   try {
     const assetsPath = path.join(distDir, 'assets');
     await fs.promises.mkdir(assetsPath, { recursive: true });
-    fs.readdir(assetsPath, (err, files) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      files.forEach((file) => {
-        const filePath = path.join(assetsPath, file);
-        if (file.isFile) {
-          fs.unlink(filePath, (err) => {
-            if (err) {
-              console.error(err);
-            }
-          });
-        }
-        fs.rm(filePath, { recursive:true }, (err) => {
-          if (err) {
-            console.error(err);
-          }
-        });
-      });
-    });
-    const entries = await fs.promises.readdir(assetsDir, { withFileTypes: true });
-    for (const entry of entries) {
-      const sourcePath = path.join(assetsDir, entry.name);
-      const destPath = path.join(assetsPath, entry.name);
+    
+    fs.rm(assetsPath, { recursive: true }, async () => {
+      const entries = await fs.promises.readdir(assetsDir, { withFileTypes: true });
+      for (const entry of entries) {
+        const sourcePath = path.join(assetsDir, entry.name);
+        const destPath = path.join(assetsPath, entry.name);
 
-      if (entry.isDirectory()) {
-        await copyDirectoryRecursive(assetsDir, assetsPath);
-      } else {
-        await fs.promises.copyFile(assetsDir, assetsPath);
+        if (entry.isDirectory()) {
+          await copyDirectoryRecursive(assetsDir, assetsPath);
+        } else {
+          await fs.promises.copyFile(assetsDir, assetsPath);
+        }
       }
-    }
+    });
   } catch (err) {
   }
 }
