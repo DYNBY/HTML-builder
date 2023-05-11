@@ -17,12 +17,12 @@ fs.mkdir(distDir, { recursive: true }, err => {
       fs.readFile(componentPath, 'utf8', (err, componentContent) => {
         if (err) throw err;
         templateContent = templateContent.replace(tag, componentContent);
-        if (tags.indexOf(tag) === tags.length - 1) {
+        
           const indexPath = path.join(distDir, 'index.html');
           fs.writeFile(indexPath, templateContent, err => {
             if (err) throw err;
           });
-        }
+
       });
     });
   });
@@ -42,12 +42,12 @@ fs.readdir(stylesDir, (err, files) => {
     fs.readFile(file, 'utf-8', (err, data) => {
       if (err) throw err;
       cssContent += data;
-      if (cssFiles.indexOf(file) === cssFiles.length - 1) {
+      
         const cssPath = path.join(distDir, 'style.css');
         fs.writeFile(cssPath, cssContent, err => {
           if (err) throw err;
         });
-      }
+
     });
   });
 });
@@ -96,6 +96,7 @@ async function copyDirectory() {
         }
       }
     });
+    
   } catch (err) {
   }
 }
